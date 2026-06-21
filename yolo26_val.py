@@ -1,4 +1,4 @@
-﻿import warnings
+import warnings
 
 from ultralytics import YOLO
 
