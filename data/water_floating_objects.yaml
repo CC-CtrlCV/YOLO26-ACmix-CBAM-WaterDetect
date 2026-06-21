@@ -1,0 +1,10 @@
+# Water-surface floating object dataset template.
+# Replace the paths below with your own dataset location.
+
+path: D:/datasets/water_floating_objects
+train: images/train
+val: images/val
+test: images/test
+
+names:
+  0: floating_object
