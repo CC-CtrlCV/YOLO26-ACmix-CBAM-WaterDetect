@@ -1,7 +1,6 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Tuple
 
 import numpy as np
 
@@ -15,7 +14,7 @@ class Tile:
     y2: int
 
 
-def split_grid(image: np.ndarray, rows: int = 4, cols: int = 6, overlap: float = 0.25) -> List[Tile]:
+def split_grid(image: np.ndarray, rows: int = 4, cols: int = 6, overlap: float = 0.25) -> list[Tile]:
     """Split an image into overlapped tiles for small-object inference."""
     if image is None or image.size == 0:
         return []
@@ -24,7 +23,7 @@ def split_grid(image: np.ndarray, rows: int = 4, cols: int = 6, overlap: float =
     tile_h = max(1, int(np.ceil(h / rows)))
     step_x = max(1, int(tile_w * (1.0 - overlap)))
     step_y = max(1, int(tile_h * (1.0 - overlap)))
-    tiles: List[Tile] = []
+    tiles: list[Tile] = []
     y = 0
     while y < h:
         x = 0
@@ -43,7 +42,9 @@ def split_grid(image: np.ndarray, rows: int = 4, cols: int = 6, overlap: float =
     return tiles
 
 
-def draw_grid(image: np.ndarray, rows: int = 4, cols: int = 6, color: Tuple[int, int, int] = (255, 180, 0)) -> np.ndarray:
+def draw_grid(
+    image: np.ndarray, rows: int = 4, cols: int = 6, color: tuple[int, int, int] = (255, 180, 0)
+) -> np.ndarray:
     """Draw a simple rows x cols grid on a BGR image."""
     import cv2
 
