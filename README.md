@@ -102,17 +102,16 @@ data/water_floating_objects.yaml
 
 ## 核心文件
 
-| 文件 | 作用 |
-| --- | --- |
-| `yolo26_train.py` | 默认 YOLO26 训练脚本 |
-| `yolo26_val.py` | 验证训练好的模型 |
-| `yolo26_predict.py` | 图片、视频、文件夹推理 |
-| `pyqt_detect.py` | PyQt 图形化检测页面 |
-| `data/water_floating_objects.yaml` | 水面漂浮物数据集模板 |
-| `ultralytics/nn/modules/ACmix.py` | ACmix 模块实现 |
-| `ultralytics/nn/modules/conv.py` | CBAM、卷积和基础注意力模块 |
-| `ultralytics/nn/tasks.py` | 模型 YAML 解析与自定义模块注册 |
-
+| 文件                               | 作用                           |
+| ---------------------------------- | ------------------------------ |
+| `yolo26_train.py`                  | 默认 YOLO26 训练脚本           |
+| `yolo26_val.py`                    | 验证训练好的模型               |
+| `yolo26_predict.py`                | 图片、视频、文件夹推理         |
+| `pyqt_detect.py`                   | PyQt 图形化检测页面            |
+| `data/water_floating_objects.yaml` | 水面漂浮物数据集模板           |
+| `ultralytics/nn/modules/ACmix.py`  | ACmix 模块实现                 |
+| `ultralytics/nn/modules/conv.py`   | CBAM、卷积和基础注意力模块     |
+| `ultralytics/nn/tasks.py`          | 模型 YAML 解析与自定义模块注册 |
 
 ## PyQt5 可视化界面结构
 
@@ -126,6 +125,7 @@ yolo_water_detect/
   utils/export_tool.py   # 图片/裁剪/JSON/CSV/视频导出
   utils/qss_style.py     # 现代化浅蓝工业风QSS样式
 ```
+
 ## 文档
 
 - 项目技术与算法说明：[docs/PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md)
@@ -138,4 +138,3 @@ yolo_water_detect/
 ## 许可证
 
 本项目基于 Ultralytics 源码二次开发，原项目采用 AGPL-3.0 License。发布到 GitHub 时请保留 `LICENSE`、来源说明和相关版权信息。
-
