@@ -1,4 +1,4 @@
-﻿# Ultralytics 馃殌 AGPL-3.0 License - https://ultralytics.com/license
+# Ultralytics 馃殌 AGPL-3.0 License - https://ultralytics.com/license
 """
 Ultralytics neural network modules.
 
@@ -17,6 +17,7 @@ Examples:
     >>> subprocess.run(f"onnxslim {f} {f} && open {f}", shell=True, check=True)  # pip install onnxslim
 """
 
+from .ACmix import ACmix
 from .block import (
     C1,
     C2,
@@ -93,7 +94,6 @@ from .head import (
     YOLOESegment26,
     v10Detect,
 )
-from .ACmix import ACmix
 from .transformer import (
     AIFI,
     MLP,
@@ -108,7 +108,6 @@ from .transformer import (
 )
 
 __all__ = (
-    "ACmix",
     "AIFI",
     "C1",
     "C2",
@@ -127,6 +126,7 @@ __all__ = (
     "SPPELAN",
     "SPPF",
     "A2C2f",
+    "ACmix",
     "AConv",
     "ADown",
     "Attention",
@@ -190,5 +190,3 @@ __all__ = (
     "YOLOESegment26",
     "v10Detect",
 )
-
-
