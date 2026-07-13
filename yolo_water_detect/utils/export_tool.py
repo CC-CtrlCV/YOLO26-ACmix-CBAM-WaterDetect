@@ -1,9 +1,9 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import csv
 import json
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Mapping
 
 import cv2
 
@@ -20,7 +20,21 @@ class ExportManager:
         self.csv_path = self.output_dir / "detections.csv"
         if not self.csv_path.exists():
             with self.csv_path.open("w", newline="", encoding="utf-8-sig") as f:
-                csv.writer(f).writerow(["source", "frame", "class_id", "class_name", "confidence", "x1", "y1", "x2", "y2", "width", "height"])
+                csv.writer(f).writerow(
+                    [
+                        "source",
+                        "frame",
+                        "class_id",
+                        "class_name",
+                        "confidence",
+                        "x1",
+                        "y1",
+                        "x2",
+                        "y2",
+                        "width",
+                        "height",
+                    ]
+                )
 
     def save_image(self, image, stem: str):
         path = self.images_dir / f"{stem}.jpg"
@@ -31,7 +45,7 @@ class ExportManager:
         saved = []
         for i, det in enumerate(detections):
             x1, y1, x2, y2 = [int(v) for v in det["xyxy"]]
-            crop = frame[max(0, y1):max(0, y2), max(0, x1):max(0, x2)]
+            crop = frame[max(0, y1) : max(0, y2), max(0, x1) : max(0, x2)]
             if crop.size == 0:
                 continue
             cls_name = str(det.get("class_name", "object")).replace(" ", "_")
@@ -51,4 +65,18 @@ class ExportManager:
             writer = csv.writer(f)
             for det in detections:
                 x1, y1, x2, y2 = det["xyxy"]
-                writer.writerow([source, frame_index, det.get("class_id", ""), det.get("class_name", ""), f"{det.get('confidence', 0):.4f}", int(x1), int(y1), int(x2), int(y2), int(x2 - x1), int(y2 - y1)])
+                writer.writerow(
+                    [
+                        source,
+                        frame_index,
+                        det.get("class_id", ""),
+                        det.get("class_name", ""),
+                        f"{det.get('confidence', 0):.4f}",
+                        int(x1),
+                        int(y1),
+                        int(x2),
+                        int(y2),
+                        int(x2 - x1),
+                        int(y2 - y1),
+                    ]
+                )

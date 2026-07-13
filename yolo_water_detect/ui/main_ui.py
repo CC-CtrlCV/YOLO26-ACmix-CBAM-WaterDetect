@@ -1,12 +1,11 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
-import json
 import time
 from collections import Counter
 from pathlib import Path
 
 import cv2
-from PyQt5.QtCore import QThread, Qt, pyqtSignal
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import (
     QApplication,
@@ -14,7 +13,6 @@ from PyQt5.QtWidgets import (
     QComboBox,
     QFileDialog,
     QFrame,
-    QGridLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -32,7 +30,6 @@ from PyQt5.QtWidgets import (
 )
 
 from yolo_water_detect.detect.yolo_infer import YoloInferencer
-from yolo_water_detect.utils.export_tool import ExportManager
 from yolo_water_detect.utils.qss_style import APP_QSS
 
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"}
@@ -132,7 +129,9 @@ class DetectionWorker(QThread):
             self.frame_ready.emit(annotated, detections, elapsed, i, total)
             self.progress.emit(i, total)
             self.stats.emit(self._stats(detections, all_counts, start))
-            self.log.emit(f"完成图片 {i}/{total}: {path.name}，目标 {len(detections)} 个，耗时 {elapsed:.1f} ms", "info")
+            self.log.emit(
+                f"完成图片 {i}/{total}: {path.name}，目标 {len(detections)} 个，耗时 {elapsed:.1f} ms", "info"
+            )
 
     def _process_video(self, path):
         cap = cv2.VideoCapture(str(path))
@@ -319,12 +318,16 @@ class MainWindow(QMainWindow):
         load.setObjectName("PrimaryButton")
         browse.clicked.connect(self.browse_model)
         load.clicked.connect(self.load_model)
-        self.device_combo = QComboBox(); self.device_combo.addItems(["cpu", "0", "1"])
+        self.device_combo = QComboBox()
+        self.device_combo.addItems(["cpu", "0", "1"])
         self.conf_slider = self._slider(1, 99, 25)
         self.iou_slider = self._slider(10, 90, 45)
-        self.imgsz_combo = QComboBox(); self.imgsz_combo.addItems(["640", "800", "1280", "1920"]); self.imgsz_combo.setCurrentText("800")
+        self.imgsz_combo = QComboBox()
+        self.imgsz_combo.addItems(["640", "800", "1280", "1920"])
+        self.imgsz_combo.setCurrentText("800")
         lay.addLayout(self._row("模型路径", self.model_path, browse))
-        lay.addWidget(QLabel("权重快速切换")); lay.addWidget(self.model_combo)
+        lay.addWidget(QLabel("权重快速切换"))
+        lay.addWidget(self.model_combo)
         lay.addLayout(self._row("设备", self.device_combo))
         lay.addLayout(self._row("置信度", self.conf_slider))
         lay.addLayout(self._row("NMS IoU", self.iou_slider))
@@ -335,7 +338,8 @@ class MainWindow(QMainWindow):
 
     def _source_card(self):
         card, lay = self._card("2. 数据源输入")
-        self.mode_combo = QComboBox(); self.mode_combo.addItems(["单张图片", "图片文件夹", "本地视频文件", "摄像头/RTSP实时流"])
+        self.mode_combo = QComboBox()
+        self.mode_combo.addItems(["单张图片", "图片文件夹", "本地视频文件", "摄像头/RTSP实时流"])
         self.source_path = QLineEdit()
         browse = QPushButton("选择")
         browse.clicked.connect(self.browse_source)
@@ -351,7 +355,8 @@ class MainWindow(QMainWindow):
         card, lay = self._card("3. 可视化参数")
         self.line_slider = self._slider(1, 8, 2)
         self.font_slider = self._slider(8, 32, 14)
-        self.show_conf = QCheckBox("显示置信度"); self.show_conf.setChecked(True)
+        self.show_conf = QCheckBox("显示置信度")
+        self.show_conf.setChecked(True)
         self.show_id = QCheckBox("显示目标ID")
         self.show_grid = QCheckBox("显示网格分割线")
         self.save_crops = QCheckBox("保存裁剪目标图")
@@ -366,11 +371,16 @@ class MainWindow(QMainWindow):
         self.output_dir = QLineEdit("output_dataset")
         browse = QPushButton("选择")
         browse.clicked.connect(self.browse_output)
-        self.save_image = QCheckBox("保存带框图片"); self.save_image.setChecked(True)
-        self.save_json = QCheckBox("导出JSON元数据"); self.save_json.setChecked(True)
-        self.save_csv = QCheckBox("导出CSV统计"); self.save_csv.setChecked(True)
+        self.save_image = QCheckBox("保存带框图片")
+        self.save_image.setChecked(True)
+        self.save_json = QCheckBox("导出JSON元数据")
+        self.save_json.setChecked(True)
+        self.save_csv = QCheckBox("导出CSV统计")
+        self.save_csv.setChecked(True)
         self.save_video = QCheckBox("导出标注视频")
-        self.max_items = QSpinBox(); self.max_items.setRange(0, 999999); self.max_items.setValue(0)
+        self.max_items = QSpinBox()
+        self.max_items.setRange(0, 999999)
+        self.max_items.setValue(0)
         lay.addLayout(self._row("输出目录", self.output_dir, browse))
         for w in (self.save_image, self.save_crops, self.save_json, self.save_csv, self.save_video):
             lay.addWidget(w)
@@ -379,9 +389,13 @@ class MainWindow(QMainWindow):
 
     def _advanced_card(self):
         card, lay = self._card("5. 高级推理")
-        self.thread_num = QSpinBox(); self.thread_num.setRange(1, 16); self.thread_num.setValue(1)
+        self.thread_num = QSpinBox()
+        self.thread_num.setRange(1, 16)
+        self.thread_num.setValue(1)
         self.fp16 = QCheckBox("启用FP16加速（GPU）")
-        self.frame_skip = QSpinBox(); self.frame_skip.setRange(1, 999); self.frame_skip.setValue(1)
+        self.frame_skip = QSpinBox()
+        self.frame_skip.setRange(1, 999)
+        self.frame_skip.setValue(1)
         self.tracker = QCheckBox("启用ByteTrack多目标跟踪")
         lay.addLayout(self._row("线程数", self.thread_num))
         lay.addWidget(self.fp16)
@@ -416,7 +430,8 @@ class MainWindow(QMainWindow):
             stats_lay.addWidget(w)
         lay.addWidget(card)
         log_card, log_lay = self._card("运行日志")
-        self.log_text = QTextEdit(); self.log_text.setReadOnly(True)
+        self.log_text = QTextEdit()
+        self.log_text.setReadOnly(True)
         clear = QPushButton("清空日志")
         save = QPushButton("保存日志")
         clear.clicked.connect(self.log_text.clear)
@@ -461,7 +476,9 @@ class MainWindow(QMainWindow):
     def browse_source(self):
         mode = self.mode_combo.currentText()
         if mode == "单张图片":
-            path, _ = QFileDialog.getOpenFileName(self, "选择图片", "", "Images (*.jpg *.jpeg *.png *.bmp *.tif *.tiff)")
+            path, _ = QFileDialog.getOpenFileName(
+                self, "选择图片", "", "Images (*.jpg *.jpeg *.png *.bmp *.tif *.tiff)"
+            )
         elif mode == "图片文件夹":
             path = QFileDialog.getExistingDirectory(self, "选择图片文件夹")
         elif mode == "本地视频文件":
@@ -513,7 +530,9 @@ class MainWindow(QMainWindow):
             "save_csv": self.save_csv.isChecked(),
             "save_video": self.save_video.isChecked(),
             "max_items": self.max_items.value(),
-            "exporter": __import__("yolo_water_detect.utils.export_tool", fromlist=["ExportManager"]).ExportManager(self.output_dir.text()),
+            "exporter": __import__("yolo_water_detect.utils.export_tool", fromlist=["ExportManager"]).ExportManager(
+                self.output_dir.text()
+            ),
         }
 
     def start_detection(self):
@@ -563,18 +582,24 @@ class MainWindow(QMainWindow):
         self.last_pixmap = QPixmap.fromImage(img)
         self.viewer.setPixmap(self.last_pixmap.scaled(self.viewer.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.time_label.value_label.setText(f"{elapsed:.0f}")
-        self.info_label.setText(f"当前帧：{idx}/{total if total else '-'} | 推理耗时：{elapsed:.1f} ms | 当前目标：{len(detections)}")
+        self.info_label.setText(
+            f"当前帧：{idx}/{total if total else '-'} | 推理耗时：{elapsed:.1f} ms | 当前目标：{len(detections)}"
+        )
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
         if self.last_pixmap:
-            self.viewer.setPixmap(self.last_pixmap.scaled(self.viewer.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            self.viewer.setPixmap(
+                self.last_pixmap.scaled(self.viewer.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            )
 
     def update_stats(self, stats):
         self.total_label.setText(f"总目标：{stats['total_count']}")
         self.current_label.setText(f"当前画面：{stats['current_count']}")
         self.size_label.setText(f"目标尺寸：最大 {stats['max_size']} / 最小 {stats['min_size']}")
-        self.class_label.setText("类别统计：" + (", ".join([f"{k}:{v}" for k, v in stats["class_counts"].items()]) or "暂无"))
+        self.class_label.setText(
+            "类别统计：" + (", ".join([f"{k}:{v}" for k, v in stats["class_counts"].items()]) or "暂无")
+        )
         self.fps_label.value_label.setText(str(stats.get("avg_fps", 0)))
 
     def set_state(self, state, text):
@@ -583,7 +608,9 @@ class MainWindow(QMainWindow):
         self.status_dot.style().unpolish(self.status_dot)
         self.status_dot.style().polish(self.status_dot)
         self.status_text.setText(text)
-        self.statusBar().showMessage(f"数据源：{self.source_path.text() or self.camera_input.text()} | 模型：{self.model_path.text()} | 设备：{self.device_combo.currentText()}")
+        self.statusBar().showMessage(
+            f"数据源：{self.source_path.text() or self.camera_input.text()} | 模型：{self.model_path.text()} | 设备：{self.device_combo.currentText()}"
+        )
 
     def log(self, message, level="info"):
         color = {"info": "#e5e7eb", "ok": "#86efac", "warn": "#fde68a", "error": "#fca5a5"}.get(level, "#e5e7eb")
@@ -598,4 +625,5 @@ class MainWindow(QMainWindow):
         path = Path(self.output_dir.text()).resolve()
         path.mkdir(parents=True, exist_ok=True)
         import os
+
         os.startfile(str(path))

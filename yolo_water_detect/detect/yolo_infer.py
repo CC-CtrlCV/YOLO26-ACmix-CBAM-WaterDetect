@@ -1,10 +1,10 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import time
-from typing import Dict, List
 
 import cv2
 import numpy as np
+
 from ultralytics import YOLO
 
 from .crop_grid import draw_grid, split_grid
@@ -22,12 +22,28 @@ class YoloInferencer:
         self.names = getattr(self.model.model, "names", {}) or getattr(self.model, "names", {}) or {}
         return self
 
-    def infer_frame(self, frame_bgr: np.ndarray, conf=0.25, iou=0.45, imgsz=640, device="cpu", half=False, line_width=2, font_scale=0.6, show_conf=True, grid=False, show_grid=False, tracker=False):
+    def infer_frame(
+        self,
+        frame_bgr: np.ndarray,
+        conf=0.25,
+        iou=0.45,
+        imgsz=640,
+        device="cpu",
+        half=False,
+        line_width=2,
+        font_scale=0.6,
+        show_conf=True,
+        grid=False,
+        show_grid=False,
+        tracker=False,
+    ):
         if self.model is None:
             raise RuntimeError("Model is not loaded")
         start = time.perf_counter()
         if grid:
-            annotated, detections = self._infer_grid(frame_bgr, conf, iou, imgsz, device, half, line_width, font_scale, show_conf)
+            annotated, detections = self._infer_grid(
+                frame_bgr, conf, iou, imgsz, device, half, line_width, font_scale, show_conf
+            )
         else:
             result = self._run_model(frame_bgr, conf, iou, imgsz, device, half, tracker)
             detections = self._extract_detections(result)
@@ -57,7 +73,7 @@ class YoloInferencer:
         self._draw_detections(annotated, detections, line_width, font_scale, show_conf)
         return annotated, detections
 
-    def _extract_detections(self, result) -> List[Dict]:
+    def _extract_detections(self, result) -> list[dict]:
         detections = []
         boxes = getattr(result, "boxes", None)
         if boxes is None:
@@ -70,7 +86,15 @@ class YoloInferencer:
             track_id = None
             if getattr(boxes, "id", None) is not None and boxes.id is not None:
                 track_id = int(boxes.id[i].detach().cpu().item())
-            detections.append({"xyxy": xyxy, "class_id": cls_id, "class_name": str(names.get(cls_id, cls_id)), "confidence": conf, "track_id": track_id})
+            detections.append(
+                {
+                    "xyxy": xyxy,
+                    "class_id": cls_id,
+                    "class_name": str(names.get(cls_id, cls_id)),
+                    "confidence": conf,
+                    "track_id": track_id,
+                }
+            )
         return detections
 
     @staticmethod
@@ -83,4 +107,13 @@ class YoloInferencer:
             label = det.get("class_name", "object")
             if show_conf:
                 label += f" {det.get('confidence', 0):.2f}"
-            cv2.putText(image, label, (x1, max(20, y1 - 6)), cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, max(1, line_width), cv2.LINE_AA)
+            cv2.putText(
+                image,
+                label,
+                (x1, max(20, y1 - 6)),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                font_scale,
+                color,
+                max(1, line_width),
+                cv2.LINE_AA,
+            )
