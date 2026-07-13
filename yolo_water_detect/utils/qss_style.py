@@ -1,4 +1,4 @@
-﻿APP_QSS = """
+APP_QSS = """
 QMainWindow, QWidget {
     background: #f3f8fd;
     color: #1f2937;
