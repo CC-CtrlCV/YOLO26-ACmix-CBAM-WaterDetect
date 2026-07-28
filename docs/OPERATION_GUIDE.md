@@ -68,16 +68,16 @@ val: images/val
 test: images/test
 
 names:
-  0: floating_object
+    0: floating_object
 ```
 
 如果你有多个类别，例如 bottle、foam、wood，需要改成：
 
 ```yaml
 names:
-  0: bottle
-  1: foam
-  2: wood
+    0: bottle
+    1: foam
+    2: wood
 ```
 
 ## 4. 修改模型类别数
@@ -106,16 +106,16 @@ python yolov11_train.py
 
 常用参数在 `yolov11_train.py` 中修改：
 
-| 参数 | 作用 |
-| --- | --- |
-| `data` | 数据集 YAML 路径 |
-| `epochs` | 训练轮数 |
-| `batch` | 批大小，显存不足时调小 |
-| `imgsz` | 输入图像尺寸，水面小目标建议 800 或 960 |
-| `device` | GPU 编号，CPU 使用 `"cpu"` |
-| `optimizer` | 优化器，如 SGD、AdamW |
-| `amp` | 自动混合精度，GPU 训练建议开启 |
-| `cache` | 是否缓存数据，内存足够时可设为 True |
+| 参数        | 作用                                    |
+| ----------- | --------------------------------------- |
+| `data`      | 数据集 YAML 路径                        |
+| `epochs`    | 训练轮数                                |
+| `batch`     | 批大小，显存不足时调小                  |
+| `imgsz`     | 输入图像尺寸，水面小目标建议 800 或 960 |
+| `device`    | GPU 编号，CPU 使用 `"cpu"`              |
+| `optimizer` | 优化器，如 SGD、AdamW                   |
+| `amp`       | 自动混合精度，GPU 训练建议开启          |
+| `cache`     | 是否缓存数据，内存足够时可设为 True     |
 
 也可以使用命令行：
 
@@ -148,13 +148,13 @@ model = YOLO("runs/detect/train/weights/best.pt")
 如果要测试 test 集，把：
 
 ```python
-split="val"
+split = "val"
 ```
 
 改成：
 
 ```python
-split="test"
+split = "test"
 ```
 
 ## 8. 推理预测
