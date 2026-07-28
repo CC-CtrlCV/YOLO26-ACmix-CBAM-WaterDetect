@@ -1,4 +1,4 @@
-﻿# Ultralytics 馃殌 AGPL-3.0 License - https://ultralytics.com/license
+# Ultralytics 馃殌 AGPL-3.0 License - https://ultralytics.com/license
 
 import contextlib
 import pickle
@@ -8,7 +8,7 @@ from copy import deepcopy
 from pathlib import Path
 
 import torch
-import torch.nn as nn
+from torch import nn
 
 from ultralytics.nn.autobackend import check_class_names
 from ultralytics.nn.modules import (
@@ -18,6 +18,7 @@ from ultralytics.nn.modules import (
     C2PSA,
     C3,
     C3TR,
+    CBAM,
     ELAN1,
     OBB,
     OBB26,
@@ -26,6 +27,7 @@ from ultralytics.nn.modules import (
     SPPELAN,
     SPPF,
     A2C2f,
+    ACmix,
     AConv,
     ADown,
     Bottleneck,
@@ -39,8 +41,6 @@ from ultralytics.nn.modules import (
     C3x,
     CBFuse,
     CBLinear,
-    CBAM,
-    ACmix,
     Classify,
     Concat,
     Conv,
@@ -1379,11 +1379,9 @@ class SafeClass:
 
     def __init__(self, *args, **kwargs):
         """Initialize SafeClass instance, ignoring all arguments."""
-        pass
 
     def __call__(self, *args, **kwargs):
         """Run SafeClass instance, ignoring all arguments."""
-        pass
 
 
 class SafeUnpickler(pickle.Unpickler):
@@ -1872,5 +1870,3 @@ def guess_model_task(model):
         "Explicitly define task for your model, i.e. 'task=detect', 'segment', 'classify','pose' or 'obb'."
     )
     return "detect"  # assume detect
-
-
